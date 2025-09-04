@@ -2,82 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Singleton Pattern Website</title>
+  <title>BankServer Singleton Demo</title>
   <style>
     body {
       margin: 0;
-      font-family: "Segoe UI", sans-serif;
-      background: #fafafa;
+      font-family: Arial, sans-serif;
+      background: #f4f4f9;
       color: #222;
     }
-    nav {
-      background: #1e293b;
-      padding: 0.8rem 2rem;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    nav ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      gap: 1rem;
-    }
-    nav a {
-      color: #fff;
-      text-decoration: none;
-      font-weight: 500;
-    }
-    nav a:hover { text-decoration: underline; }
-
     header {
       background: linear-gradient(135deg, #3b82f6, #06b6d4);
       color: white;
       text-align: center;
-      padding: 4rem 2rem;
+      padding: 3rem 1rem;
     }
-    header h1 { margin: 0; font-size: 2.5rem; }
-    header p { font-size: 1.2rem; }
+    header h1 { margin: 0; font-size: 2.2rem; }
+    header p { font-size: 1.1rem; }
 
     main {
-      max-width: 1000px;
-      margin: auto;
+      max-width: 800px;
+      margin: 2rem auto;
+      background: #fff;
       padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-    section { margin-bottom: 3rem; }
     h2 { margin-top: 0; color: #334155; }
 
-    /* Tabs */
-    .tabs {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    .tabs button {
-      padding: 0.6rem 1rem;
-      border: none;
-      background: #e2e8f0;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .tabs button.active {
+    button {
       background: #3b82f6;
-      color: white;
-    }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    button.action {
-      background: #3b82f6;
-      color: white;
       border: none;
-      padding: 0.5rem 1rem;
-      margin: 0.2rem;
+      padding: 0.7rem 1.2rem;
+      margin: 0.3rem;
       border-radius: 6px;
+      color: #fff;
       cursor: pointer;
+      font-size: 1rem;
     }
-    button.action:hover { background: #2563eb; }
+    button:hover { background: #2563eb; }
 
     pre {
       background: #111827;
@@ -86,88 +48,48 @@
       border-radius: 6px;
       overflow-x: auto;
     }
+
     #log {
       background: #000;
       color: #0f0;
       font-family: monospace;
       padding: 1rem;
-      height: 200px;
+      height: 180px;
       overflow-y: auto;
       border-radius: 6px;
     }
+
     footer {
-      background: #1e293b;
-      color: #94a3b8;
       text-align: center;
       padding: 1rem;
+      margin-top: 2rem;
+      color: #666;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
-  <nav>
-    <ul>
-      <li><a href="#examples">Examples</a></li>
-      <li><a href="#logSection">Log</a></li>
-    </ul>
-  </nav>
-
   <header>
-    <h1>Singleton Pattern Demo</h1>
-    <p>Interactive Website built with HTML, CSS, and JavaScript</p>
+    <h1>Banking App – Singleton Pattern</h1>
+    <p>Only one BankServer instance exists across the system</p>
   </header>
 
   <main>
-    <section id="examples">
-      <h2>Singleton Implementations</h2>
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="appConfig">AppConfig</button>
-        <button class="tab-btn" data-tab="bankServer">BankServer</button>
-        <button class="tab-btn" data-tab="rideManager">RideManager</button>
-        <button class="tab-btn" data-tab="shoppingCart">ShoppingCart</button>
-      </div>
+    <h2>BankServer Singleton</h2>
+    <button onclick="getBankServer()">Get Instance</button>
+    <button onclick="processTransaction()">Process Transaction</button>
+    <pre id="bankOutput">// Output will appear here</pre>
 
-      <!-- AppConfig -->
-      <div class="tab-content active" id="appConfig">
-        <button class="action" onclick="getAppConfig()">Get Instance</button>
-        <button class="action" onclick="toggleCurrency()">Toggle Currency</button>
-        <pre id="appConfigView">// Output here</pre>
-      </div>
-
-      <!-- BankServer -->
-      <div class="tab-content" id="bankServer">
-        <button class="action" onclick="getBankServer()">Get Instance</button>
-        <button class="action" onclick="processTransaction()">Process Transaction</button>
-        <pre id="bankView">// Output here</pre>
-      </div>
-
-      <!-- RideManager -->
-      <div class="tab-content" id="rideManager">
-        <button class="action" onclick="getRideManager()">Get Instance</button>
-        <button class="action" onclick="startTrip()">Start Trip</button>
-        <pre id="rideView">// Output here</pre>
-      </div>
-
-      <!-- ShoppingCart -->
-      <div class="tab-content" id="shoppingCart">
-        <input type="text" id="sessionId" placeholder="Session ID" value="S-1">
-        <button class="action" onclick="getCart()">Get Cart</button>
-        <button class="action" onclick="addItem()">Add Item</button>
-        <pre id="cartView">// Cart content</pre>
-      </div>
-    </section>
-
-    <section id="logSection">
-      <h2>Log</h2>
-      <div id="log"></div>
-    </section>
+    <h2>Log Console</h2>
+    <div id="log"></div>
   </main>
 
   <footer>
-    &copy; 2025 Singleton Demo Website | Built with HTML, CSS, JavaScript
+    &copy; 2025 Singleton Pattern Demo
   </footer>
 
   <script>
-    // ---------- Utility ----------
+    // ---------- Logger ----------
     const logEl = document.getElementById("log");
     function log(msg) {
       logEl.innerHTML = `[${new Date().toLocaleTimeString()}] ${msg}<br>` + logEl.innerHTML;
@@ -177,91 +99,38 @@
       return obj.__id;
     }
 
-    // ---------- AppConfig Singleton ----------
-    const AppConfig = (function() {
-      const instance = { currency: "USD", tax: 0.08 };
-      return { getInstance: () => instance };
-    })();
-    function getAppConfig() {
-      const c = AppConfig.getInstance();
-      document.getElementById("appConfigView").textContent = JSON.stringify(c, null, 2);
-      log("AppConfig fetched id=" + idOf(c));
-    }
-    function toggleCurrency() {
-      const c = AppConfig.getInstance();
-      c.currency = c.currency === "USD" ? "EUR" : "USD";
-      document.getElementById("appConfigView").textContent = JSON.stringify(c, null, 2);
-      log("Currency toggled: " + c.currency);
-    }
-
     // ---------- BankServer Singleton ----------
     const BankServer = (function() {
-      let instance;
-      function create() { return { created: Date.now() }; }
-      return { getInstance: () => instance || (instance = create()) };
-    })();
-    function getBankServer() {
-      const b = BankServer.getInstance();
-      document.getElementById("bankView").textContent = "BankServer id=" + idOf(b);
-      log("BankServer instance id=" + idOf(b));
-    }
-    function processTransaction() {
-      const b = BankServer.getInstance();
-      log("Processing transaction on BankServer id=" + idOf(b));
-    }
-
-    // ---------- RideManager Singleton ----------
-    const RideManager = (function() {
-      let instance;
-      function create() { return { activeTrips: [] }; }
-      return { getInstance: () => instance || (instance = create()) };
-    })();
-    function getRideManager() {
-      const r = RideManager.getInstance();
-      document.getElementById("rideView").textContent = "RideManager id=" + idOf(r);
-      log("RideManager instance id=" + idOf(r));
-    }
-    function startTrip() {
-      const r = RideManager.getInstance();
-      const trip = "TRIP-" + Math.floor(Math.random()*1000);
-      r.activeTrips.push(trip);
-      document.getElementById("rideView").textContent = JSON.stringify(r, null, 2);
-      log("Started trip " + trip + " on RideManager id=" + idOf(r));
-    }
-
-    // ---------- ShoppingCartManager ----------
-    const ShoppingCartManager = (function() {
-      const carts = {};
+      let instance; // private static reference
+      function create() {
+        return { createdAt: new Date().toLocaleString() };
+      }
       return {
-        getCart: sid => carts[sid] || (carts[sid] = { sessionId: sid, items: {} }),
-        addItem: (sid, sku, qty) => {
-          const cart = carts[sid] || (carts[sid] = { sessionId: sid, items: {} });
-          cart.items[sku] = (cart.items[sku] || 0) + qty;
+        getInstance: function() {
+          if (!instance) {
+            instance = create();
+            log("New BankServer instance created.");
+          }
+          return instance;
         }
       };
     })();
-    function getCart() {
-      const sid = document.getElementById("sessionId").value;
-      const c = ShoppingCartManager.getCart(sid);
-      document.getElementById("cartView").textContent = JSON.stringify(c, null, 2);
-      log("Cart fetched for " + sid);
-    }
-    function addItem() {
-      const sid = document.getElementById("sessionId").value;
-      ShoppingCartManager.addItem(sid, "ITEM-1", 1);
-      getCart();
-      log("Item added to cart " + sid);
+
+    // ---------- UI Handlers ----------
+    function getBankServer() {
+      const server = BankServer.getInstance();
+      document.getElementById("bankOutput").textContent =
+        "BankServer instance id=" + idOf(server) + "\n" +
+        JSON.stringify(server, null, 2);
+      log("BankServer fetched (id=" + idOf(server) + ")");
     }
 
-    // ---------- Tabs ----------
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-        document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
-        btn.classList.add("active");
-        document.getElementById(btn.dataset.tab).classList.add("active");
-      });
-    });
+    function processTransaction() {
+      const server = BankServer.getInstance();
+      const tx = "TX-" + Math.floor(Math.random()*10000);
+      log("Processing " + tx + " using BankServer id=" + idOf(server));
+    }
   </script>
 </body>
 </html>
+
